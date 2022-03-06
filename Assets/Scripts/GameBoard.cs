@@ -8,9 +8,13 @@ public class GameBoard : MonoBehaviour
     [SerializeField] private GameTile _tilePrefab;
 
     private BoardData _boardData;
+    private GameTileContentFactory _contentFactory;
 
     private GameTile[,] _tiles;
-    private GameTileContentFactory _contentFactory;
+    private Transform _tilesParent;
+
+    private int _boardXSize;
+    private int _boardYSize;
 
     private GameBoardRenderer _gameBoardRenderer;
 
@@ -27,8 +31,8 @@ public class GameBoard : MonoBehaviour
         _gameBoardRenderer.Initialize(boardData.BoardSprite);
 
 
-        int boardXSize = _boardData.BoardSize.x;
-        int boardYSize = _boardData.BoardSize.y;
+        _boardXSize = _boardData.BoardSize.x;
+        _boardYSize = _boardData.BoardSize.y;
 
         float cellXSize = _boardData.CellSize.x;
         float cellYSize = _boardData.CellSize.y;
@@ -36,28 +40,61 @@ public class GameBoard : MonoBehaviour
         float initXOffset = _boardData.BoardOffset.x;
         float initYOffset = _boardData.BoardOffset.y;
 
-        Vector2 initOffset = new Vector2(initXOffset + (boardXSize - 1) * (cellXSize / 2), initYOffset + (boardYSize - 1) * (cellYSize / 2));
+        Vector2 initOffset = new Vector2(initXOffset + (_boardXSize - 1) * (cellXSize / 2), initYOffset + (_boardYSize - 1) * (cellYSize / 2));
 
 
-        _tiles = new GameTile[boardXSize, boardYSize];
         _contentFactory = contentFactory;
 
-        for (int y = 0; y < boardYSize; y++)
+        _tiles = new GameTile[_boardXSize, _boardYSize];
+
+        _tilesParent = new GameObject("GameTiles").transform;
+        _tilesParent.SetParent(transform, false);
+
+        for (int y = 0; y < _boardYSize; y++)
         {
-            for (int x = 0; x < boardXSize; x++)
+            for (int x = 0; x < _boardXSize; x++)
             {
                 GameTile tile = _tiles[x, y] = Instantiate(_tilePrefab);
-                tile.transform.SetParent(transform, false);
+                tile.transform.SetParent(_tilesParent, false);
 
                 float lineOffset = y * (cellXSize - 1); //с каждой последующей строчкой происходит смещение
                 tile.transform.localPosition = new Vector2(x * cellXSize + lineOffset - initOffset.x, y * cellYSize - initOffset.y);
+
+                if (x > 0)
+                {
+                    GameTile.MakeLeftRightNeighbors(tile, _tiles[x - 1, y]);
+                }
+
+                if (y > 0)
+                {
+                    GameTile.MakeUpDownNeighbors(tile, _tiles[x, y - 1]);
+                }
             }
         }
 
         Clear();
     }
 
-    private void Clear()
+    public GameTile GetRandomTile()
+    {
+        List<GameTile> availableTiles = new List<GameTile>(_boardXSize * _boardYSize);
+
+        for (int x = 0; x < _boardXSize; x++)
+        {
+            for (int y = 0; y < _boardYSize; y++)
+            {
+                if(_tiles[x, y].Content.Type == GameTileContentType.Empty)
+                {
+                    availableTiles.Add(_tiles[x, y]);
+                }
+            }
+        }
+
+        int randomAvailableTileIndex = Random.Range(0, availableTiles.Count);
+        return availableTiles[randomAvailableTileIndex];
+    }
+
+    public void Clear()
     {
         for (int x = 0; x < _tiles.GetLength(0); x++)
         {
