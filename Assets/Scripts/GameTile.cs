@@ -14,6 +14,11 @@ public class GameTile : MonoBehaviour
         }
         set
         {
+            if(_content != null)
+            {
+                _content.Recycle();
+            }
+
             _content = value;
             _content.transform.localPosition = transform.localPosition;
         }

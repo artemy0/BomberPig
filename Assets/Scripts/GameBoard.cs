@@ -53,16 +53,32 @@ public class GameBoard : MonoBehaviour
                 tile.transform.localPosition = new Vector2(x * cellXSize + lineOffset - initOffset.x, y * cellYSize - initOffset.y);
             }
         }
+
+        Clear();
     }
 
-    private void Clear(GameTile tile, GameTileContent content)
+    private void Clear()
     {
-        
+        for (int x = 0; x < _tiles.GetLength(0); x++)
+        {
+            for (int y = 0; y < _tiles.GetLength(1); y++)
+            {
+                GameTileContentType contentType = GameTileContentType.Empty;
+                if(x % 2 != 0 && y % 2 != 0)
+                {
+                    contentType = GameTileContentType.Stone;
+                }
+
+                GameTileContent content = _contentFactory.Get(contentType);
+                ForceBuild(_tiles[x, y], content);
+            }
+        }
     }
 
 
-    private void ForceBuild(GameTileContentType type)
+    private void ForceBuild(GameTile tile, GameTileContent content)
     {
-
+        tile.Content = content;
+        //_contentToUpdate.Add(content);
     }
 }
