@@ -5,34 +5,46 @@ using DG.Tweening;
 
 public class Entity : MonoBehaviour
 {
-    [SerializeField] private EntityView _view;
+    public EntityFactory OriginFactory { get; set; }
+
+    [SerializeField] protected EntityView _view;
     [Space(10)]
-    [SerializeField] private float _movementDuration = 1f;
+    [SerializeField] private float _movementDuration = .25f;
 
-    private GameTile _currentTile;
+    protected GameTile _currentTile;
 
 
-    public void Move(GameTile tile)
+    public virtual void Initialize()
     {
-        transform.localPosition = tile.transform.localPosition;
-        _currentTile = tile;
+        _view.Initialize();
     }
 
-    public void Move(Direction direction)
+
+    public virtual void Move(Direction direction)
     {
         GameTile targetTile = _currentTile.GetNeighbor(direction);
 
-        transform.DOLocalMove(targetTile.transform.localPosition, _movementDuration);
-        _currentTile = targetTile;
+        if (IsAvailableToMove(targetTile))
+        {
+            _view.SetDirection(direction);
+
+            transform.DOLocalMove(targetTile.transform.localPosition, _movementDuration);
+
+            _currentTile.Entity = null;
+            _currentTile = targetTile;
+            _currentTile.Entity = this;
+        }
     }
-}
+    protected bool IsAvailableToMove(GameTile targetTile)
+    {
+        return targetTile != null && targetTile.Content.Type == GameTileContentType.Empty && targetTile.Entity == null;
+    }
 
-public enum Direction
-{
-    Tap,
-
-    Up,
-    Down,
-    Left,
-    Right
+    public void Teleport(GameTile tile)
+    {
+        transform.localPosition = tile.transform.localPosition;
+        
+        _currentTile = tile;
+        _currentTile.Entity = this;
+    }
 }

@@ -18,6 +18,8 @@ public class GameBoard : MonoBehaviour
 
     private GameBoardRenderer _gameBoardRenderer;
 
+    private List<GameTileContent> _contentToUpdate = new List<GameTileContent>();
+
 
     private void Awake()
     {
@@ -75,6 +77,16 @@ public class GameBoard : MonoBehaviour
         Clear();
     }
 
+
+    public void GameUpdate()
+    {
+        for (int i = 0; i < _contentToUpdate.Count; i++)
+        {
+            _contentToUpdate[i].GameUpdate();
+        }
+    }
+
+
     public GameTile GetRandomTile()
     {
         List<GameTile> availableTiles = new List<GameTile>(_boardXSize * _boardYSize);
@@ -113,9 +125,38 @@ public class GameBoard : MonoBehaviour
     }
 
 
+    public void ForceDestroy(GameTile tile)
+    {
+        if (tile.Content.Type == GameTileContentType.Empty)
+        {
+            return;
+        }
+
+        tile.Content.Recycle();
+        _contentToUpdate.Remove(tile.Content);
+
+        GameTileContent emptyContent = _contentFactory.Get(GameTileContentType.Empty);
+        ForceBuild(tile, emptyContent);
+    }
+
+    public GameTileContent TryBuild(GameTile tile, GameTileContentType contentType)
+    {
+        if (tile.Content.Type != GameTileContentType.Empty)
+        {
+            return null;
+        }
+
+        GameTileContent content = _contentFactory.Get(contentType);
+        
+        tile.Content = content;
+        _contentToUpdate.Add(content);
+
+        return content;
+    }
+
     private void ForceBuild(GameTile tile, GameTileContent content)
     {
         tile.Content = content;
-        //_contentToUpdate.Add(content);
+        _contentToUpdate.Add(content);
     }
 }

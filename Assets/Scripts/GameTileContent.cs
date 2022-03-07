@@ -14,4 +14,9 @@ public class GameTileContent : MonoBehaviour
     {
         OriginFactory.Reclaim(this);
     }
+
+    public virtual void GameUpdate()
+    {
+
+    }
 }

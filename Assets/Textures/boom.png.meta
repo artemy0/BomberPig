@@ -1,19 +1,7 @@
 fileFormatVersion: 2
-guid: 94bf0f3f2d387f443828d594fc894dc7
+guid: 5cc97e692aab5fc4c959d010dbc166e1
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: -5792511334730316588
-    second: pig_0
-  - first:
-      213: 1382654831687872026
-    second: pig_1
-  - first:
-      213: 40422208409524962
-    second: pig_2
-  - first:
-      213: -4671057516089923990
-    second: pig_3
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -53,12 +41,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 591
+  spritePixelsToUnits: 295.5
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -125,91 +113,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: pig_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 1200
-        width: 1600
-        height: 1200
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4d4c9ff81addc9fa0800000000000000
-      internalID: -5792511334730316588
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: pig_1
-      rect:
-        serializedVersion: 2
-        x: 1600
-        y: 1200
-        width: 1600
-        height: 1200
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a1eabb96e3d203310800000000000000
-      internalID: 1382654831687872026
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: pig_2
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 3
-        width: 1600
-        height: 1200
-      alignment: 9
-      pivot: {x: 0.5356329, y: 0.64431924}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2ea594dc8cb9f8000800000000000000
-      internalID: 40422208409524962
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: pig_3
-      rect:
-        serializedVersion: 2
-        x: 1600
-        y: 0
-        width: 1600
-        height: 1200
-      alignment: 9
-      pivot: {x: 0.4891423, y: 0.61943537}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a66aa0cffe11d2fb0800000000000000
-      internalID: -4671057516089923990
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []

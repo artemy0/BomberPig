@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameTile : MonoBehaviour
 {
     private GameTileContent _content;
+    private Entity _entity;
 
     private GameTile _right, _left, _down, _up; 
 
@@ -25,6 +26,18 @@ public class GameTile : MonoBehaviour
             _content = value;
             _content.transform.SetParent(transform, false);
             _content.transform.localPosition = Vector2.zero;
+        }
+    }
+
+    public Entity Entity
+    {
+        get
+        {
+            return _entity;
+        }
+        set
+        {
+            _entity = value;
         }
     }
 

@@ -7,7 +7,7 @@ public class GameTileContentFactory : ScriptableObject
 {
     [SerializeField] private GameTileContent _emptyPrefab;
     [SerializeField] private GameTileContent _stonePrefab;
-    [SerializeField] private GameTileContent _bombPrefab;
+    [SerializeField] private Bomb _bombPrefab;
 
 
     public GameTileContent Get(GameTileContentType contentType)
