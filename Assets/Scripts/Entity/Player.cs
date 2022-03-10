@@ -3,14 +3,13 @@ using System;
 public class Player : Entity
 {
     public event Action OnPlayerDied;
+    public event Action<GameTile, GameTileContentType> OnBuild;
 
-    private GameBoard _gameBoard;
     private bool isAlive = false;
 
 
     public void Initialize(GameBoard gameBoard)
     {
-        _gameBoard = gameBoard;
         isAlive = true;
 
         base.Initialize();
@@ -23,17 +22,18 @@ public class Player : Entity
         {
             if (direction == Direction.Tap)
             {
-                Bomb bomb = (Bomb)_gameBoard.TryBuild(_currentTile, GameTileContentType.Bomb);
-                if (bomb != null)
-                {
-                    bomb.Initialize(_gameBoard, _currentTile);
-                }
+                PlantBomb();
             }
             else
             {
                 base.Move(direction);
             }
         }
+    }
+
+    private void PlantBomb()
+    {
+        OnBuild?.Invoke(_currentTile, GameTileContentType.Bomb);
     }
 
 

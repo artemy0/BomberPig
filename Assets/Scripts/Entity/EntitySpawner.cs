@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class EntitySpawner : MonoBehaviour
 {
-    public event Action OnPlayerDie;
-
     [SerializeField] private int _enemyCount;
     [SerializeField] private float _delayBtwSpawn;
 
@@ -43,16 +41,16 @@ public class EntitySpawner : MonoBehaviour
     }
 
 
-    public void SpawnEntities(Action OnEntitiesSpawned)
+    public void SpawnEntities(Action<Player, List<Enemy>> OnEntitiesSpawned)
     {
         StartCoroutine(SpawnEntitiesSmoothly(OnEntitiesSpawned));
     }
-    private IEnumerator SpawnEntitiesSmoothly(Action OnEntitiesSpawned)
+    private IEnumerator SpawnEntitiesSmoothly(Action<Player, List<Enemy>> OnEntitiesSpawned)
     {
         WaitForSeconds waitBtwSpawn = new WaitForSeconds(_delayBtwSpawn);
 
         _player = SpawnPlayer();
-        _player.OnPlayerDied += PlayerDied;
+        _player.OnBuild += _gameBoard.TryBuild;
 
         yield return waitBtwSpawn;
 
@@ -64,12 +62,7 @@ public class EntitySpawner : MonoBehaviour
             yield return waitBtwSpawn;
         }
 
-        OnEntitiesSpawned?.Invoke();
-    }
-
-    public void ReleaseEntities()
-    {
-        _player.OnPlayerDied -= PlayerDied;
+        OnEntitiesSpawned?.Invoke(_player, _enemies);
     }
 
 
@@ -89,10 +82,6 @@ public class EntitySpawner : MonoBehaviour
         player.Teleport(spawnTile);
 
         return player;
-    }
-    private void PlayerDied()
-    {
-        OnPlayerDie?.Invoke();
     }
 
     private Enemy SpawnEnemy()

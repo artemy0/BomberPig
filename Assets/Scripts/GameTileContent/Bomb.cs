@@ -1,25 +1,28 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Bomb : GameTileContent
 {
+    public event Action<GameTile> OnExploded;
+
     [SerializeField] private int _minTicksToExplode = 4;
     [SerializeField] private int _maxTicksToExplode = 6;
     [Space(10)]
     [SerializeField] private ExplosionEffect _explosionEffect;
 
-    private GameBoard _gameBoard;
+    //private GameBoard _gameBoard;
     private GameTile _gameTile;
 
     private int _ticksToExplode;
 
 
-    public void Initialize(GameBoard gameBoard, GameTile gameTile)
+    public void Initialize(GameTile gameTile)
     {
-        _gameBoard = gameBoard;
+        //_gameBoard = gameBoard;
         _gameTile = gameTile;
 
-        _ticksToExplode = Random.Range(_minTicksToExplode, _maxTicksToExplode + 1);
+        _ticksToExplode = UnityEngine.Random.Range(_minTicksToExplode, _maxTicksToExplode + 1);
     }
 
 
@@ -36,21 +39,28 @@ public class Bomb : GameTileContent
 
     private void Explode()
     {
-        if(_gameTile.Entity != null)
+        if (_gameTile.Entity != null)
         {
             _gameTile.Entity.Kill();
         }
-        _gameBoard.ForceDestroy(_gameTile);
+        //_gameBoard.ForceDestroy(_gameTile);
 
         List<GameTile> neighbors = _gameTile.GetNeighbors();
         for (int i = 0; i < neighbors.Count; i++)
         {
-            if(neighbors[i] != null && neighbors[i].Entity != null)
+            if (neighbors[i] != null && neighbors[i].Entity != null)
             {
                 neighbors[i].Entity.Kill();
             }
         }
 
+        OnExploded?.Invoke(_gameTile);
+
+        PlayExplodeEffect();
+    }
+
+    private void PlayExplodeEffect()
+    {
         ExplosionEffect explosionEffect = Instantiate(_explosionEffect);
         explosionEffect.transform.position = transform.position;
     }

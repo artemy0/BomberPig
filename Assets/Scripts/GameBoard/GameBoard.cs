@@ -119,19 +119,24 @@ public class GameBoard : MonoBehaviour
     }
 
 
-    public GameTileContent TryBuild(GameTile tile, GameTileContentType contentType)
+    public void TryBuild(GameTile tile, GameTileContentType contentType)
     {
         if (tile.Content.Type != GameTileContentType.Empty)
         {
-            return null;
+            return;
         }
 
         GameTileContent content = _contentFactory.Get(contentType);
+        //
+        if(content is Bomb)
+        {
+            Bomb bomb = (Bomb)content;
+            bomb.Initialize(tile);
+            bomb.OnExploded += ForceDestroy;
+        }
         
         tile.Content = content;
         _contentToUpdate.Add(content);
-
-        return content;
     }
 
     private void ForceBuild(GameTile tile, GameTileContent content)

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Game : MonoBehaviour
@@ -13,6 +15,8 @@ public class Game : MonoBehaviour
     [Space(10)]
     [SerializeField] private MainView _mainView;
     [SerializeField] private LoseView _loseView;
+
+    private Player _player;
 
 
     private void Start()
@@ -35,17 +39,15 @@ public class Game : MonoBehaviour
 
     public void StartGame()
     {
-        _entitySpawner.SpawnEntities(SubHandleInput);
-        _entitySpawner.OnPlayerDie += EndGame;
+        Action<Player, List<Enemy>> onEnititiesSpawned = SubscribeGameEvent;
+        _entitySpawner.SpawnEntities(onEnititiesSpawned);
 
         _mainView.CloseView();
     }
 
     public void EndGame()
     {
-        _entitySpawner.ReleaseEntities();
-        UnsubHandleInput();
-        _entitySpawner.OnPlayerDie -= EndGame;
+        UnsubscribeGameEvent();
 
         _loseView.OpenView();
     }
@@ -60,13 +62,19 @@ public class Game : MonoBehaviour
     }
 
 
-    private void SubHandleInput()
+    private void SubscribeGameEvent(Player player, List<Enemy> enemies)
     {
         _input.OnInputHandled += HandleInput;
+
+        _player = player;
+        _player.OnPlayerDied += EndGame;
+
     }
-    private void UnsubHandleInput()
+    private void UnsubscribeGameEvent()
     {
         _input.OnInputHandled -= HandleInput;
+
+        _player.OnPlayerDied -= EndGame;
     }
 
     private void HandleInput(Direction direction)
