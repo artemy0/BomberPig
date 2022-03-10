@@ -36,12 +36,12 @@ Tестовое задание:
 
 # Project Structure
     |-- Assets
-	|-- Datas
+        |-- Datas
         |-- Materials
         |-- Plugins
         |-- Prefabs
         |-- Resources
-	|-- SandBox
+        |-- SandBox
         |-- Scenes
         |-- Scripts
         |   |-- Editor
