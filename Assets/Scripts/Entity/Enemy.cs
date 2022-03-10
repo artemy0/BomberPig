@@ -7,53 +7,33 @@ public class Enemy : Entity
 {
     public event Action<Enemy> OnEnemyDied;
 
-    public void MoveToRandomDirection()
+
+    public override void Move(Direction direction)
     {
-        Direction randomDirection = GetRandomDirection();
-        Move(randomDirection);
+        if (direction != Direction.Tap)
+        {
+            Direction randomDirection = GetRandomDirection();
+            base.Move(randomDirection);
+        }
     }
 
     public bool TryHit()
     {
-        Direction targetDirection = Direction.Tap;
-        GameTile targetNeighbor = null;
+        List<Direction> directions = null;
+        List<GameTile> neigbors = _currentTile.GetNeighbors(out directions);
 
-        GameTile upNeighbor = _currentTile.GetNeighbor(Direction.Up);
-        GameTile downNeighbor = _currentTile.GetNeighbor(Direction.Down);
-        GameTile leftNeighbor = _currentTile.GetNeighbor(Direction.Left);
-        GameTile rightNeighbor = _currentTile.GetNeighbor(Direction.Right);
-        
-        if (IsAvailableToHit(upNeighbor))
+        for (int i = 0; i < neigbors.Count; i++)
         {
-            targetDirection = Direction.Up;
-            targetNeighbor = upNeighbor;
-        }
-        else if (IsAvailableToHit(downNeighbor))
-        {
-            targetDirection = Direction.Down;
-            targetNeighbor = downNeighbor;
-        }
-        else if (IsAvailableToHit(leftNeighbor))
-        {
-            targetDirection = Direction.Left;
-            targetNeighbor = leftNeighbor;
-        }
-        else if (IsAvailableToHit(rightNeighbor))
-        {
-            targetDirection = Direction.Right;
-            targetNeighbor = rightNeighbor;
-        }
+            if (IsAvailableToHit(neigbors[i]))
+            {
+                _view.SetAttack();
+                _view.SetDirection(directions[i]);
 
+                Player player = (Player)neigbors[i].Entity;
+                player.Kill();
 
-        if (targetDirection != Direction.Tap && targetNeighbor != null)
-        {
-            _view.SetAttack();
-            _view.SetDirection(targetDirection);
-
-            Player player = (Player)targetNeighbor.Entity;
-            player.Kill();
-
-            return true;
+                return true;
+            }
         }
 
         return false;
@@ -62,35 +42,23 @@ public class Enemy : Entity
 
     private Direction GetRandomDirection()
     {
-        List<Direction> directions = new List<Direction>(4);
+        List<Direction> availableDirections = new List<Direction>(4);
 
-        GameTile upNeighbor = _currentTile.GetNeighbor(Direction.Up);
-        GameTile downNeighbor = _currentTile.GetNeighbor(Direction.Down);
-        GameTile leftNeighbor = _currentTile.GetNeighbor(Direction.Left);
-        GameTile rightNeighbor = _currentTile.GetNeighbor(Direction.Right);
+        List<Direction> directions = null;
+        List<GameTile> neigbors = _currentTile.GetNeighbors(out directions);
 
-        if (IsAvailableToMove(upNeighbor))
+        for (int i = 0; i < neigbors.Count; i++)
         {
-            directions.Add(Direction.Up);
-        }
-        if (IsAvailableToMove(downNeighbor))
-        {
-            directions.Add(Direction.Down);
-        }
-        if (IsAvailableToMove(leftNeighbor))
-        {
-            directions.Add(Direction.Left);
-        }
-        if (IsAvailableToMove(rightNeighbor))
-        {
-            directions.Add(Direction.Right);
+            if (IsAvailableToMove(neigbors[i]))
+            {
+                availableDirections.Add(directions[i]);
+            }
         }
 
-
-        if (directions.Count > 0)
+        if (availableDirections.Count > 0)
         {
-            int randomDirectionIndex = UnityEngine.Random.Range(0, directions.Count);
-            return directions[randomDirectionIndex];
+            int randomAvailableDirectionsIndex = UnityEngine.Random.Range(0, availableDirections.Count);
+            return availableDirections[randomAvailableDirectionsIndex];
         }
         else
         {
@@ -105,6 +73,6 @@ public class Enemy : Entity
     public override void Kill()
     {
         OnEnemyDied?.Invoke(this);
-        OriginFactory.Reclaim(this);
+        Recycle();
     }
 }

@@ -48,6 +48,12 @@ public class GameTile : MonoBehaviour
 
         return neighbors;
     }
+    public List<GameTile> GetNeighbors(out List<Direction> directions)
+    {
+        directions = new List<Direction>() { Direction.Up, Direction.Down, Direction.Left, Direction.Right };
+
+        return GetNeighbors();
+    }
     public GameTile GetNeighbor(Direction direction)
     {
         switch (direction)

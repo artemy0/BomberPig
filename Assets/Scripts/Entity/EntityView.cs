@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
 
@@ -10,7 +8,6 @@ public class EntityView : MonoBehaviour
     [Space(10)]
     [SerializeField] private SpriteState _defaultSpriteState;
     [SerializeField] private SpriteState _attackSpriteState;
-    [SerializeField] private SpriteState _deathSpriteState;
 
     private SpriteRenderer _renderer;
 
@@ -60,15 +57,11 @@ public class EntityView : MonoBehaviour
     {
         SetState(_attackSpriteState);
     }
-    
-    public void SetDeath()
-    {
-        SetState(_deathSpriteState);
-    }
 
 
     private void SetState(SpriteState spriteState)
     {
+        //у entity нет данного SpriteState-а
         if (spriteState.UpDirectionSprite == null)
         {
             return;

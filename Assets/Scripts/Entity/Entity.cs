@@ -4,7 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using System;
 
-public class Entity : MonoBehaviour
+public abstract class Entity : MonoBehaviour
 {
     public EntityFactory OriginFactory { get; set; }
     public GameTile CurrentTile { get { return _currentTile; } }
@@ -51,8 +51,9 @@ public class Entity : MonoBehaviour
     }
 
 
-    public virtual void Kill()
+    public abstract void Kill();
+    public void Recycle()
     {
-
+        OriginFactory.Reclaim(this);
     }
 }

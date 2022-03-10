@@ -12,15 +12,9 @@ public class Game : MonoBehaviour
     [Space(10)]
     [SerializeField] private GameBoard _gameBoard;
     [SerializeField] private EntitySpawner _entitySpawner;
-    [Space(5)]
-    [SerializeField] private int _enemyCount;
-    [SerializeField] private float _delayBtwSpawn;
     [Space(10)]
     [SerializeField] private MainView _mainView;
     [SerializeField] private LoseView _loseView;
-
-    private Player _player;
-    private LinkedList<Enemy> _enemies;
 
 
     private void Start()
@@ -44,14 +38,17 @@ public class Game : MonoBehaviour
 
     public void StartGame()
     {
-        SpawnEntities();
+        _entitySpawner.SpawnEntities(SubHandleInput);
+        _entitySpawner.OnPlayerDie += EndGame;
 
         _mainView.CloseView();
     }
 
     public void EndGame()
     {
-        ReleaseEntities();
+        _entitySpawner.ReleaseEntities();
+        UnsubHandleInput();
+        _entitySpawner.OnPlayerDie -= EndGame;
 
         _loseView.OpenView();
     }
@@ -66,37 +63,14 @@ public class Game : MonoBehaviour
     }
 
 
-    private void SpawnEntities()
+    private void SubHandleInput()
     {
-        StartCoroutine(SpawnEntitiesSmoothly());
-    }
-    private IEnumerator SpawnEntitiesSmoothly()
-    {
-        WaitForSeconds waitBtwSpawn = new WaitForSeconds(_delayBtwSpawn);
-
-        _player = _entitySpawner.SpawnPlayer();
-        _player.OnPlayerDied += EndGame;
-
-        yield return waitBtwSpawn;
-
-        _enemies = new LinkedList<Enemy>();
-        for (int i = 0; i < _enemyCount; i++)
-        {
-            _enemies.AddFirst(_entitySpawner.SpawnEnemy());
-
-            yield return waitBtwSpawn;
-        }
-
         _input.OnInputHandled += HandleInput;
     }
-
-    private void ReleaseEntities()
+    private void UnsubHandleInput()
     {
-        _player.OnPlayerDied -= EndGame;
-
         _input.OnInputHandled -= HandleInput;
     }
-
 
     private void HandleInput(Direction direction)
     {

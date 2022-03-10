@@ -1,9 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EntitySpawner : MonoBehaviour
 {
+    public event Action OnPlayerDie;
+
+    [SerializeField] private int _enemyCount;
+    [SerializeField] private float _delayBtwSpawn;
+
     private GameBoard _gameBoard;
     private EntityFactory _entityFactory;
 
@@ -24,7 +30,7 @@ public class EntitySpawner : MonoBehaviour
         {
             if (_enemies[i].TryHit() == false)
             {
-                _enemies[i].MoveToRandomDirection();
+                _enemies[i].Move(direction);
             }
         }
 
@@ -37,25 +43,59 @@ public class EntitySpawner : MonoBehaviour
     }
 
 
-    public Player SpawnPlayer()
+    public void SpawnEntities(Action OnEntitiesSpawned)
+    {
+        StartCoroutine(SpawnEntitiesSmoothly(OnEntitiesSpawned));
+    }
+    private IEnumerator SpawnEntitiesSmoothly(Action OnEntitiesSpawned)
+    {
+        WaitForSeconds waitBtwSpawn = new WaitForSeconds(_delayBtwSpawn);
+
+        _player = SpawnPlayer();
+        _player.OnPlayerDied += PlayerDied;
+
+        yield return waitBtwSpawn;
+
+        _enemies = new List<Enemy>();
+        for (int i = 0; i < _enemyCount; i++)
+        {
+            _enemies.Add(SpawnEnemy());
+
+            yield return waitBtwSpawn;
+        }
+
+        OnEntitiesSpawned?.Invoke();
+    }
+
+    public void ReleaseEntities()
+    {
+        _player.OnPlayerDied -= PlayerDied;
+    }
+
+
+    private Player SpawnPlayer()
     {
         if(_player != null)
         {
-            _player.OriginFactory.Reclaim(_player);
+            _player.Recycle();
         }
 
         GameTile spawnTile = _gameBoard.GetRandomTile();
 
-        _player = (Player)_entityFactory.Get(EntityType.Player);
-        _player.transform.SetParent(transform, false);
+        Player player = (Player)_entityFactory.Get(EntityType.Player);
+        player.transform.SetParent(transform, false);
 
-        _player.Initialize(_gameBoard);
-        _player.Teleport(spawnTile);
+        player.Initialize(_gameBoard);
+        player.Teleport(spawnTile);
 
-        return _player;
+        return player;
+    }
+    private void PlayerDied()
+    {
+        OnPlayerDie?.Invoke();
     }
 
-    public Enemy SpawnEnemy()
+    private Enemy SpawnEnemy()
     {
         if(_enemies == null)
         {
@@ -73,9 +113,7 @@ public class EntitySpawner : MonoBehaviour
         enemy.Initialize();
         enemy.Teleport(spawnTile);
 
-        _enemies.Add(enemy);
         enemy.OnEnemyDied += DestroyEnemy;
-
         void DestroyEnemy(Enemy enemy)
         {
             _enemies.Remove(enemy);
@@ -90,10 +128,10 @@ public class EntitySpawner : MonoBehaviour
 
     public void Clear()
     {
-        _player.OriginFactory.Reclaim(_player);
+        _player.Recycle();
         for (int i = 0; i < _enemies.Count; i++)
         {
-            _enemies[i].OriginFactory.Reclaim(_enemies[i]);
+            _enemies[i].Recycle();
         }
 
         _player = null;
