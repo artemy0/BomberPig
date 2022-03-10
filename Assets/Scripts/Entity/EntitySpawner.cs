@@ -108,7 +108,7 @@ public class EntitySpawner : MonoBehaviour
             _enemies.Remove(enemy);
             enemy.OnEnemyDied -= DestroyEnemy;
 
-            SpawnEnemy();
+            _enemies.Add(SpawnEnemy());
         }
 
         return enemy;

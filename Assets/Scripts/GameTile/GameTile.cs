@@ -6,7 +6,7 @@ public class GameTile : MonoBehaviour
     private GameTileContent _content;
     private Entity _entity;
 
-    private GameTile _right, _left, _down, _up; 
+    private GameTile _rightNeighbor, _leftNeighbor, _downNeighbor, _upNeighbor; 
 
 
     public GameTileContent Content
@@ -43,7 +43,7 @@ public class GameTile : MonoBehaviour
 
     public List<GameTile> GetNeighbors()
     {
-        List<GameTile> neighbors = new List<GameTile>() { _up, _down, _left, _right };
+        List<GameTile> neighbors = new List<GameTile>() { _upNeighbor, _downNeighbor, _leftNeighbor, _rightNeighbor };
 
         return neighbors;
     }
@@ -58,28 +58,28 @@ public class GameTile : MonoBehaviour
         switch (direction)
         {
             case Direction.Up:
-                return _up;
+                return _upNeighbor;
             case Direction.Down:
-                return _down;
+                return _downNeighbor;
             case Direction.Left:
-                return _left;
+                return _leftNeighbor;
             case Direction.Right:
-                return _right;
+                return _rightNeighbor;
         }
 
         return null;
     }
 
 
-    public static void MakeLeftRightNeighbors(GameTile right, GameTile left)
+    public static void MakeLeftRightNeighbors(GameTile rightNeighbor, GameTile leftNeighbor)
     {
-        left._right = right;
-        right._left = left;
+        leftNeighbor._rightNeighbor = rightNeighbor;
+        rightNeighbor._leftNeighbor = leftNeighbor;
     }
 
-    public static void MakeUpDownNeighbors(GameTile up, GameTile down)
+    public static void MakeUpDownNeighbors(GameTile upNeighbor, GameTile downNeighbor)
     {
-        up._down = down;
-        down._up = up;
+        upNeighbor._downNeighbor = downNeighbor;
+        downNeighbor._upNeighbor = upNeighbor;
     }
 }

@@ -65,7 +65,8 @@ public class GameBoard : MonoBehaviour
                 GameTile tile = _tiles[x, y] = Instantiate(_tilePrefab);
                 tile.transform.SetParent(_tilesParent, false);
 
-                float lineOffset = y * (cellXSize - 1); //с каждой последующей строчкой происходит смещение
+                //with each subsequent line there is an offset
+                float lineOffset = y * (cellXSize - 1);
                 tile.transform.localPosition = new Vector2(x * cellXSize + lineOffset - initOffset.x, y * cellYSize - initOffset.y);
 
                 if (x > 0)
@@ -127,8 +128,9 @@ public class GameBoard : MonoBehaviour
         }
 
         GameTileContent content = _contentFactory.Get(contentType);
-        //
-        if(content is Bomb)
+
+        //violation of the Barbara Liskov substitution principle!
+        if (content is Bomb)
         {
             Bomb bomb = (Bomb)content;
             bomb.Initialize(tile);
@@ -152,6 +154,13 @@ public class GameBoard : MonoBehaviour
         if (tile.Content.Type == GameTileContentType.Empty)
         {
             return;
+        }
+
+        //violation of the Barbara Liskov substitution principle!
+        if (tile.Content is Bomb)
+        {
+            Bomb bomb = (Bomb)tile.Content;
+            bomb.OnExploded -= ForceDestroy;
         }
 
         tile.Content.Recycle();

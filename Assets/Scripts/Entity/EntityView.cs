@@ -61,7 +61,7 @@ public class EntityView : MonoBehaviour
 
     private void SetState(SpriteState spriteState)
     {
-        //у entity нет данного SpriteState-а
+        //entity does not have a given SpriteState
         if (spriteState.UpDirectionSprite == null)
         {
             return;

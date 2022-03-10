@@ -11,7 +11,6 @@ public class Bomb : GameTileContent
     [Space(10)]
     [SerializeField] private ExplosionEffect _explosionEffect;
 
-    //private GameBoard _gameBoard;
     private GameTile _gameTile;
 
     private int _ticksToExplode;
@@ -19,7 +18,6 @@ public class Bomb : GameTileContent
 
     public void Initialize(GameTile gameTile)
     {
-        //_gameBoard = gameBoard;
         _gameTile = gameTile;
 
         _ticksToExplode = UnityEngine.Random.Range(_minTicksToExplode, _maxTicksToExplode + 1);
@@ -43,7 +41,6 @@ public class Bomb : GameTileContent
         {
             _gameTile.Entity.Kill();
         }
-        //_gameBoard.ForceDestroy(_gameTile);
 
         List<GameTile> neighbors = _gameTile.GetNeighbors();
         for (int i = 0; i < neighbors.Count; i++)

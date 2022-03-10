@@ -4,7 +4,7 @@ using DG.Tweening;
 public abstract class Entity : MonoBehaviour
 {
     public EntityFactory OriginFactory { get; set; }
-    public GameTile CurrentTile { get { return _currentTile; } }
+    public GameTile CurrentTile => _currentTile;
 
     [SerializeField] protected EntityView _view;
     [Space(10)]

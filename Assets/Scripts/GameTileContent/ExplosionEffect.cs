@@ -22,7 +22,9 @@ public class ExplosionEffect : MonoBehaviour
 
         _renderer.color = _startColor;
         animation
+            //half the time the effect appears
             .Append(_renderer.DOColor(_midleColor, _animationDuration / 2))
+            //half the time the effect disappears
             .Append(_renderer.DOColor(_startColor, _animationDuration / 2))
             .OnComplete(() => Destroy(gameObject));
     }

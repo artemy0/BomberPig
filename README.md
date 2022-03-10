@@ -48,7 +48,7 @@ Tестовое задание:
         |-- Sprites
 
 # APK
-https://drive.google.com/file/d/1btApEjToPPEIw_u_PVpm9vnj-2P4FK8C/view?usp=sharing
+https://drive.google.com/file/d/1X-9b_AOQTCdyKn6-LfdA6K54jrBO5Q7n/view?usp=sharing
 
 # Плагины, использованные в проекте:
 * DOTween

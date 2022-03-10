@@ -288,7 +288,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyCount: 7
-  _delayBtwSpawn: 0.2
+  _delayBtwSpawn: 0.1
 --- !u!1 &356750922
 GameObject:
   m_ObjectHideFlags: 0
