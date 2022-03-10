@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System;
 
 public class Enemy : Entity
@@ -39,7 +37,6 @@ public class Enemy : Entity
         return false;
     }
 
-
     private Direction GetRandomDirection()
     {
         List<Direction> availableDirections = new List<Direction>(4);
@@ -69,6 +66,7 @@ public class Enemy : Entity
     {
         return targetTile != null && targetTile.Entity != null && targetTile.Entity is Player;
     }
+
 
     public override void Kill()
     {

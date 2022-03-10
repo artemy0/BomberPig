@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -37,36 +36,22 @@ public class Bomb : GameTileContent
 
     private void Explode()
     {
-        ExplosionEffect explosionEffect = Instantiate(_explosionEffect);
-        explosionEffect.transform.position = transform.position;
-
-        _gameBoard.ForceDestroy(_gameTile);
         if(_gameTile.Entity != null)
         {
             _gameTile.Entity.Kill();
         }
+        _gameBoard.ForceDestroy(_gameTile);
 
+        List<GameTile> neighbors = _gameTile.GetNeighbors();
+        for (int i = 0; i < neighbors.Count; i++)
+        {
+            if(neighbors[i] != null && neighbors[i].Entity != null)
+            {
+                neighbors[i].Entity.Kill();
+            }
+        }
 
-        GameTile upTile = _gameTile.GetNeighbor(Direction.Up);
-        GameTile downTile = _gameTile.GetNeighbor(Direction.Down);
-        GameTile leftTile = _gameTile.GetNeighbor(Direction.Left);
-        GameTile rightTile = _gameTile.GetNeighbor(Direction.Right);
-
-        if(upTile != null && upTile.Entity != null)
-        {
-            upTile.Entity.Kill();
-        }
-        if (downTile != null && downTile.Entity != null)
-        {
-            downTile.Entity.Kill();
-        }
-        if (leftTile != null && leftTile.Entity != null)
-        {
-            leftTile.Entity.Kill();
-        }
-        if (rightTile != null && rightTile.Entity != null)
-        {
-            rightTile.Entity.Kill();
-        }
+        ExplosionEffect explosionEffect = Instantiate(_explosionEffect);
+        explosionEffect.transform.position = transform.position;
     }
 }

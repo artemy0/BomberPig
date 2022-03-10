@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Game : MonoBehaviour
@@ -21,7 +19,6 @@ public class Game : MonoBehaviour
     {
         _gameBoard.Initialize(_boardData, _contentFactory);
         _entitySpawner.Initialize(_gameBoard, _entityFactory);
-
 
         _mainView.OpenView();
 

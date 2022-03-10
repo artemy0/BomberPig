@@ -287,6 +287,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 392970e0f66ad8b42898415dce4e0d79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _enemyCount: 7
+  _delayBtwSpawn: 0.2
 --- !u!1 &356750922
 GameObject:
   m_ObjectHideFlags: 0
@@ -817,7 +819,7 @@ GameObject:
   m_Component:
   - component: {fileID: 832096744}
   m_Layer: 0
-  m_Name: ViewController
+  m_Name: Views
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -851,8 +853,8 @@ GameObject:
   - component: {fileID: 865021107}
   - component: {fileID: 865021106}
   - component: {fileID: 865021105}
-  - component: {fileID: 865021103}
   - component: {fileID: 865021108}
+  - component: {fileID: 865021103}
   m_Layer: 5
   m_Name: LoseViewCanvas
   m_TagString: Untagged
@@ -1114,8 +1116,8 @@ GameObject:
   - component: {fileID: 1226843469}
   - component: {fileID: 1226843468}
   - component: {fileID: 1226843467}
-  - component: {fileID: 1226843471}
   - component: {fileID: 1226843472}
+  - component: {fileID: 1226843471}
   m_Layer: 5
   m_Name: MainViewCanvas
   m_TagString: Untagged
@@ -1611,8 +1613,6 @@ MonoBehaviour:
   _input: {fileID: 1381032937}
   _gameBoard: {fileID: 612847359}
   _entitySpawner: {fileID: 302887329}
-  _enemyCount: 7
-  _delayBtwSpawn: 0.1
   _mainView: {fileID: 1226843471}
   _loseView: {fileID: 865021103}
 --- !u!4 &2034042950

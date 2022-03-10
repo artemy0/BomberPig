@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(GameBoardRenderer))]
@@ -10,16 +8,16 @@ public class GameBoard : MonoBehaviour
 
     private BoardData _boardData;
     private GameTileContentFactory _contentFactory;
+    
+    private GameBoardRenderer _gameBoardRenderer;
 
     private GameTile[,] _tiles;
     private Transform _tilesParent;
+    
+    private List<GameTileContent> _contentToUpdate = new List<GameTileContent>();
 
     private int _boardXSize;
     private int _boardYSize;
-
-    private GameBoardRenderer _gameBoardRenderer;
-
-    private List<GameTileContent> _contentToUpdate = new List<GameTileContent>();
 
 
     private void Awake()
@@ -33,7 +31,16 @@ public class GameBoard : MonoBehaviour
         _boardData = boardData;
         _gameBoardRenderer.Initialize(boardData.BoardSprite);
 
+        _contentFactory = contentFactory;
 
+
+        InitBoard();
+
+        Clear();
+    }
+
+    private void InitBoard()
+    {
         _boardXSize = _boardData.BoardSize.x;
         _boardYSize = _boardData.BoardSize.y;
 
@@ -45,8 +52,6 @@ public class GameBoard : MonoBehaviour
 
         Vector2 initOffset = new Vector2(initXOffset + (_boardXSize - 1) * (cellXSize / 2), initYOffset + (_boardYSize - 1) * (cellYSize / 2));
 
-
-        _contentFactory = contentFactory;
 
         _tiles = new GameTile[_boardXSize, _boardYSize];
 
@@ -74,8 +79,6 @@ public class GameBoard : MonoBehaviour
                 }
             }
         }
-
-        Clear();
     }
 
 
