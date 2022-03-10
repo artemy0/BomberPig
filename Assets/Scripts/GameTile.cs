@@ -42,6 +42,12 @@ public class GameTile : MonoBehaviour
     }
 
 
+    public List<GameTile> GetNeighbors()
+    {
+        List<GameTile> neighbors = new List<GameTile>() { _up, _down, _left, _right };
+
+        return neighbors;
+    }
     public GameTile GetNeighbor(Direction direction)
     {
         switch (direction)

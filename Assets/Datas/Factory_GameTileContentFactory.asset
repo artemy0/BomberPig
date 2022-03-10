@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _emptyPrefab: {fileID: 776608878835876734, guid: 97839edd8b3bb10418b91319f07a1f57, type: 3}
   _stonePrefab: {fileID: 3053018711492681208, guid: d731f27fa16625541a7006606edb74d3, type: 3}
-  _bombPrefab: {fileID: 8282061859379519495, guid: e9cbf6110fdb8d840903e5c138610e5f, type: 3}
+  _bombPrefab: {fileID: 1226812287277130775, guid: e9cbf6110fdb8d840903e5c138610e5f, type: 3}

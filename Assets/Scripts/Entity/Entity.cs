@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System;
 
 public class Entity : MonoBehaviour
 {
     public EntityFactory OriginFactory { get; set; }
+    public GameTile CurrentTile { get { return _currentTile; } }
 
     [SerializeField] protected EntityView _view;
     [Space(10)]
@@ -46,5 +48,11 @@ public class Entity : MonoBehaviour
         
         _currentTile = tile;
         _currentTile.Entity = this;
+    }
+
+
+    public virtual void Kill()
+    {
+
     }
 }

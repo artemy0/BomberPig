@@ -41,5 +41,32 @@ public class Bomb : GameTileContent
         explosionEffect.transform.position = transform.position;
 
         _gameBoard.ForceDestroy(_gameTile);
+        if(_gameTile.Entity != null)
+        {
+            _gameTile.Entity.Kill();
+        }
+
+
+        GameTile upTile = _gameTile.GetNeighbor(Direction.Up);
+        GameTile downTile = _gameTile.GetNeighbor(Direction.Down);
+        GameTile leftTile = _gameTile.GetNeighbor(Direction.Left);
+        GameTile rightTile = _gameTile.GetNeighbor(Direction.Right);
+
+        if(upTile != null && upTile.Entity != null)
+        {
+            upTile.Entity.Kill();
+        }
+        if (downTile != null && downTile.Entity != null)
+        {
+            downTile.Entity.Kill();
+        }
+        if (leftTile != null && leftTile.Entity != null)
+        {
+            leftTile.Entity.Kill();
+        }
+        if (rightTile != null && rightTile.Entity != null)
+        {
+            rightTile.Entity.Kill();
+        }
     }
 }

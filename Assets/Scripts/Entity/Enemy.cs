@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Enemy : Entity
 {
+    public event Action<Enemy> OnEnemyDied;
+
     public void MoveToRandomDirection()
     {
         Direction randomDirection = GetRandomDirection();
@@ -86,7 +89,7 @@ public class Enemy : Entity
 
         if (directions.Count > 0)
         {
-            int randomDirectionIndex = Random.Range(0, directions.Count);
+            int randomDirectionIndex = UnityEngine.Random.Range(0, directions.Count);
             return directions[randomDirectionIndex];
         }
         else
@@ -97,5 +100,11 @@ public class Enemy : Entity
     private bool IsAvailableToHit(GameTile targetTile)
     {
         return targetTile != null && targetTile.Entity != null && targetTile.Entity is Player;
+    }
+
+    public override void Kill()
+    {
+        OnEnemyDied?.Invoke(this);
+        OriginFactory.Reclaim(this);
     }
 }

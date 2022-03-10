@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96b55063e008c5b42baf8b6e7777ab28, type: 3}
   m_Name: Factory_EntityFactory
   m_EditorClassIdentifier: 
-  _playerPrefab: {fileID: 0}
-  _defaultEnemy: {fileID: 0}
+  _playerPrefab: {fileID: 6769750194318669064, guid: e71efd33a54c3994bb62577f04769b38, type: 3}
+  _defaultEnemy: {fileID: 5298910087107045766, guid: a97e616366409644e997c30cc7857f73, type: 3}
   _specialEnemy: {fileID: 0}

@@ -33,8 +33,8 @@ public class EntityFactory : ScriptableObject
     }
 
 
-    public void Reclaim(GameTileContent content)
+    public void Reclaim(Entity entity)
     {
-        Destroy(content.gameObject);
+        Destroy(entity.gameObject);
     }
 }

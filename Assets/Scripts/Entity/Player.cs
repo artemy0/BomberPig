@@ -40,9 +40,9 @@ public class Player : Entity
     }
 
 
-    public void Kill()
+    public override void Kill()
     {
-        isAlive = false;
         OnPlayerDied?.Invoke();
+        isAlive = false;
     }
 }

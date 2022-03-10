@@ -12,6 +12,12 @@ public class Game : MonoBehaviour
     [Space(10)]
     [SerializeField] private GameBoard _gameBoard;
     [SerializeField] private EntitySpawner _entitySpawner;
+    [Space(5)]
+    [SerializeField] private int _enemyCount;
+    [SerializeField] private float _delayBtwSpawn;
+    [Space(10)]
+    [SerializeField] private MainView _mainView;
+    [SerializeField] private LoseView _loseView;
 
     private Player _player;
     private LinkedList<Enemy> _enemies;
@@ -22,25 +28,69 @@ public class Game : MonoBehaviour
         _gameBoard.Initialize(_boardData, _contentFactory);
         _entitySpawner.Initialize(_gameBoard, _entityFactory);
 
-        StartGame();
+
+        _mainView.OpenView();
+
+        _mainView.OnStartButtonClicked += StartGame;
+        _loseView.OnMenuButtonClicked += ClearGame;
+    }
+
+    private void OnDestroy()
+    {
+        _mainView.OnStartButtonClicked -= StartGame;
+        _loseView.OnMenuButtonClicked -= ClearGame;
     }
 
 
     public void StartGame()
     {
+        SpawnEntities();
+
+        _mainView.CloseView();
+    }
+
+    public void EndGame()
+    {
+        ReleaseEntities();
+
+        _loseView.OpenView();
+    }
+
+    public void ClearGame()
+    {
+        _gameBoard.Clear();
+        _entitySpawner.Clear();
+
+        _mainView.OpenView();
+        _loseView.CloseView();
+    }
+
+
+    private void SpawnEntities()
+    {
+        StartCoroutine(SpawnEntitiesSmoothly());
+    }
+    private IEnumerator SpawnEntitiesSmoothly()
+    {
+        WaitForSeconds waitBtwSpawn = new WaitForSeconds(_delayBtwSpawn);
+
         _player = _entitySpawner.SpawnPlayer();
         _player.OnPlayerDied += EndGame;
 
+        yield return waitBtwSpawn;
+
         _enemies = new LinkedList<Enemy>();
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < _enemyCount; i++)
         {
             _enemies.AddFirst(_entitySpawner.SpawnEnemy());
+
+            yield return waitBtwSpawn;
         }
 
         _input.OnInputHandled += HandleInput;
     }
 
-    public void EndGame()
+    private void ReleaseEntities()
     {
         _player.OnPlayerDied -= EndGame;
 
@@ -50,16 +100,8 @@ public class Game : MonoBehaviour
 
     private void HandleInput(Direction direction)
     {
-        foreach (Enemy enemy in _enemies)
-        {
-            if (enemy.TryHit() == false)
-            {
-                enemy.MoveToRandomDirection();
-            }
-        }
-
-        _player.Move(direction);
-
         _gameBoard.GameUpdate();
+
+        _entitySpawner.GameUpdate(direction);
     }
 }

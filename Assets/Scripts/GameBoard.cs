@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(GameBoardRenderer))]
@@ -87,7 +88,7 @@ public class GameBoard : MonoBehaviour
     }
 
 
-    public GameTile GetRandomTile()
+    public GameTile GetRandomTile(List<GameTile> exclusionCells = null)
     {
         List<GameTile> availableTiles = new List<GameTile>(_boardXSize * _boardYSize);
 
@@ -102,42 +103,18 @@ public class GameBoard : MonoBehaviour
             }
         }
 
+        if (exclusionCells != null)
+        {
+            for (int i = 0; i < exclusionCells.Count; i++)
+            {
+                availableTiles.Remove(exclusionCells[i]);
+            }
+        }
+
         int randomAvailableTileIndex = Random.Range(0, availableTiles.Count);
         return availableTiles[randomAvailableTileIndex];
     }
 
-    public void Clear()
-    {
-        for (int x = 0; x < _tiles.GetLength(0); x++)
-        {
-            for (int y = 0; y < _tiles.GetLength(1); y++)
-            {
-                GameTileContentType contentType = GameTileContentType.Empty;
-                if(x % 2 != 0 && y % 2 != 0)
-                {
-                    contentType = GameTileContentType.Stone;
-                }
-
-                GameTileContent content = _contentFactory.Get(contentType);
-                ForceBuild(_tiles[x, y], content);
-            }
-        }
-    }
-
-
-    public void ForceDestroy(GameTile tile)
-    {
-        if (tile.Content.Type == GameTileContentType.Empty)
-        {
-            return;
-        }
-
-        tile.Content.Recycle();
-        _contentToUpdate.Remove(tile.Content);
-
-        GameTileContent emptyContent = _contentFactory.Get(GameTileContentType.Empty);
-        ForceBuild(tile, emptyContent);
-    }
 
     public GameTileContent TryBuild(GameTile tile, GameTileContentType contentType)
     {
@@ -157,6 +134,43 @@ public class GameBoard : MonoBehaviour
     private void ForceBuild(GameTile tile, GameTileContent content)
     {
         tile.Content = content;
+        tile.Entity = null;
+
         _contentToUpdate.Add(content);
+    }
+
+    public void ForceDestroy(GameTile tile)
+    {
+        if (tile.Content.Type == GameTileContentType.Empty)
+        {
+            return;
+        }
+
+        tile.Content.Recycle();
+        _contentToUpdate.Remove(tile.Content);
+
+        GameTileContent emptyContent = _contentFactory.Get(GameTileContentType.Empty);
+        ForceBuild(tile, emptyContent);
+    }
+
+
+    public void Clear()
+    {
+        _contentToUpdate.Clear();
+
+        for (int x = 0; x < _tiles.GetLength(0); x++)
+        {
+            for (int y = 0; y < _tiles.GetLength(1); y++)
+            {
+                GameTileContentType contentType = GameTileContentType.Empty;
+                if(x % 2 != 0 && y % 2 != 0)
+                {
+                    contentType = GameTileContentType.Stone;
+                }
+
+                GameTileContent content = _contentFactory.Get(contentType);
+                ForceBuild(_tiles[x, y], content);
+            }
+        }
     }
 }
